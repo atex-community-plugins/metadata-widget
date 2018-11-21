@@ -1,0 +1,16 @@
+{
+  "name": "Metadata widget",
+  "description": "A metadata widget",
+  "scripts": ["widget.js"],
+
+  "requires": [
+    {
+      "name": "select2",
+      "path": "/onecms/polopoly_fs/atex.onecms.Widget-pBaseSelect2!select2/select2.js"
+    },
+    {
+      "name": "sortable",
+      "path": "sortable/Sortable.min.js"
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- artifact description -->
+
+  <name>Metadata Widget Plugin</name>
+
+  <description>
+    Metadata Widget
+  </description>
+
+  <parent>
+    <groupId>com.polopoly</groupId>
+    <artifactId>public</artifactId>
+    <version>10.16.7</version>
+    <relativePath />
+  </parent>
+
+  <organization>
+    <name>Atex</name>
+    <url>http://www.atex.com</url>
+  </organization>
+
+  <!-- artifact definition -->
+
+  <groupId>com.atex.plugins</groupId>
+  <artifactId>metadata-widget</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <distributionManagement>
+    <repository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>polopoly-pd-plugins</id>
+      <name>Polopoly Product Plugins</name>
+      <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-pd-plugins</url>
+      <layout>default</layout>
+    </repository>
+    <snapshotRepository>
+      <uniqueVersion>false</uniqueVersion>
+      <id>polopoly-pd-plugins-snapshots</id>
+      <name>Polopoly Product Plugins Snapshots</name>
+      <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-pd-plugins-snapshots</url>
+      <layout>default</layout>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <licenses>
+    <license>
+      <name>Atex Polopoly Source Code License</name>
+      <url>http://support.polopoly.com/confluence/display/GREENHOUSE/APSCL</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>products</id>
+      <name>Polopoly Products</name>
+      <email>support.polopoly@atex.com</email>
+      <organization>Atex</organization>
+      <organizationUrl>http://www.atex.com</organizationUrl>
+    </developer>
+  </developers>
+
+  <issueManagement>
+    <system>JIRA</system>
+    <url>http://support.atex.com/jira/browse/GONG</url>
+  </issueManagement>
+
+  <scm>
+    <developerConnection>scm:git:git@github.com:atex-community-plugins/metadata-widget.git</developerConnection>
+    <url>https://github.com/atex-community-plugins/metadata-widget</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <properties>
+    <polopoly.version>10.16.7</polopoly.version>
+    <camel.version>2.13.2</camel.version>
+    <spring.version>4.1.0.RELEASE</spring.version>
+  </properties>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>polopoly-public</id>
+      <name>Polopoly Public</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <repositories>
+    <repository>
+      <id>polopoly-public</id>
+      <name>Polopoly Public</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-public</url>
+    </repository>
+    <repository>
+      <id>polopoly-plugins</id>
+      <name>Polopoly Plugins</name>
+      <url>http://maven.polopoly.com/nexus/content/groups/polopoly-plugins</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>${polopoly.version}</version>
+      <classifier>api</classifier>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>${polopoly.version}</version>
+      <type>jar</type>
+      <scope>runtime</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Make the concurrent dependency explicit so that we can remove it from the jboss container libs -->
+    <dependency>
+      <groupId>concurrent</groupId>
+      <artifactId>concurrent</artifactId>
+      <version>1.3.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-ejb_2.1_spec</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>integration-server</artifactId>
+      <version>${polopoly.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.9.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-bundle</artifactId>
+      <version>1.19.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>10.17.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.atex</groupId>
+      <artifactId>module-desk</artifactId>
+      <version>1.11-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.atex</groupId>
+      <artifactId>module-desk</artifactId>
+      <version>1.12</version>
+    </dependency>
+    <dependency>
+      <groupId>com.polopoly</groupId>
+      <artifactId>polopoly</artifactId>
+      <version>10.16.7</version>
+      <classifier>api</classifier>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.5.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>p-maven-plugin</artifactId>
+        <groupId>com.polopoly.extensions</groupId>
+        <version>${polopoly.version}</version>
+        <configuration>
+          <generatePluginXml>true</generatePluginXml>
+        </configuration>
+        <executions>
+          <execution>
+           <id>pack-content</id>
+            <goals>
+              <goal>dot-content-to-xml</goal>
+              <goal>pack</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <contentDataFileResources>
+                <files>
+                  <directory>${project.basedir}/src/main/contentfiles</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </files>
+                <!-- Remove this source directory if not used -->
+                <!--
+                <files>
+                  <directory>${project.build.directory}/generated-contentfiles</directory>
+                  <includes>
+                    <include>**</include>
+                  </includes>
+                </files>
+                -->
+              </contentDataFileResources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>deploy</id>
+
+      <distributionManagement>
+        <repository>
+          <name>Polopoly PD Plugins</name>
+          <id>polopoly-pd-plugins</id>
+          <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-pd-plugins</url>
+        </repository>
+        <snapshotRepository>
+          <name>Polopoly PD Plugins Snapshots</name>
+          <id>polopoly-pd-plugins-snapshots</id>
+          <url>http://maven.polopoly.com/nexus/content/repositories/polopoly-pd-plugins-snapshots</url>
+        </snapshotRepository>
+      </distributionManagement>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.3</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>IT</id>
+      <activation>
+        <property>
+          <name>it</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+</project>

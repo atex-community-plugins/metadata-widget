@@ -1,0 +1,8 @@
+<span x-ng-if="isLoading" class="help-block"><i class="fa fa-spin fa-spinner"></i> Loading entities...</span>
+<span x-ng-if="error" class="help-block"><i class="fa fa-warning text-danger"></i> <strong>Error while loading entities, cannot display entity tree.</strong></span>
+
+<div x-ng-show="!isLoading && !error" class="well well-sm">
+  <ul class="metadata-tree root list-unstyled no-select" ng-style="treeStyle">
+    <li x-ng-repeat="entity in entities" x-p-metadata-tree-entity data-leaf-only="{{leafOnly}}" data-maximum-selection-size="{{maximumSelectionSize}}" data-selected-entity-ids="selectedEntityIds" data-add-entity="addEntity" data-remove-entity="removeEntity" data-entity="entity"></li>
+  </ul>
+</div>

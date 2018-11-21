@@ -1,0 +1,67 @@
+<link rel="stylesheet" type="text/css" ng-href="{{select2BaseUrl}}/select2/select2.css">
+<link rel="stylesheet" type="text/css" ng-href="{{select2BaseUrl}}/select2/select2-bootstrap.css">
+<link rel="stylesheet" type="text/css" ng-href="{{baseUrl}}/style.css">
+
+<div class="toggle" x-ng-show="toggle">
+  <span class="topic-selection">Topic tree selection.</span>
+  <a href="#" onclick="return false;" class="toggle-editing" x-ng-click="toggleEdit();">
+    <i class="fa" x-ng-class="{'fa-caret-down': editing, 'fa-caret-right': !editing}"></i> <span x-ng-show="!editing">Show</span> <span x-ng-show="editing">Hide</span>
+  </a>
+</div>
+
+<div class="pMetadata" x-ng-class="{ 'no-touch': !touch }" >
+  <span x-ng-show="loading" class="onecms-spinner-icon"></span>
+
+  <div x-ng-if="numberOfMissingTaxonomies > 0" class="alert alert-warning">
+    <strong>Warning: <span x-ng-show="numberOfMissingTaxonomies === 1">A taxonomy</span><span x-ng-show="numberOfMissingTaxonomies > 1">Some taxonomies</span> ({{missingTaxonomies}}) could not be read, which means some dimensions might be missing below.</strong>
+  </div>
+
+  <span class="help-block" x-ng-if="!loading && dimensionInfos.length === 0">
+    <strong>No metadata taxonomy information available. Please select one or more associated sites for this article.</strong>
+  </span>
+
+  <div x-ng-repeat="dimensionInfo in dimensionInfos">
+    <div class="form-group" x-ng-if="isDimensionRequired(dimensionInfo) && (dimensionInfo.model.length > 0 || editable)" ng-class="(dimensionInfo.dimension.enumerable) ? 'tree-dimension' : ''" >
+      <label class="control-label" x-ng-show="dimensionInfo.dimension.name !== 'Author'">{{dimensionInfo.dimension.name}}</label>
+
+      <div x-ng-show="editing || !toggle" x-ng-if="dimensionInfo.dimension.enumerable && editable && !isLookup(dimensionInfo.dimension.name)" x-p-metadata-tree-dimension data-leaf-only="{{leafOnly}}" data-maximum-selection-size="{{maximumSelectionSize}}" data-preload-depth="{{treePreloadDepth}}" data-max-height="{{treeMaxHeight}}" data-dimension-id="{{dimensionInfo.dimension.id}}" x-ng-model="dimensionInfo.model"></div>
+
+      <input ng-if="!isLookup(dimensionInfo.dimension.name)" name="{{dimensionInfo.dimension.id}}" x-dummy-data="{{dimensionInfo.model}}"
+             ng-required="{{config.required}}" class="form-control" type="hidden"
+             x-p-metadata-tag-dimension data-editable="{{editable}}" data-dimension-id="{{dimensionInfo.dimension.id}}"
+             data-enumerable="{{dimensionInfo.dimension.enumerable}}" data-auto-completion="{{autoCompletion}}"
+             dimensionname="{{dimensionInfo.dimension.name}}"
+             data-exclude="{{exclude}}"
+             data-dimension-info="dimensionInfo.entityResolveInfo" x-ng-model="dimensionInfo.model" />
+
+      <span ng-if="isLookup(dimensionInfo.dimension.name)">
+          <ui-select multiple="false" ng-model="dimensionInfo.model" style="width: 100%;" close-on-select="true" title="dimensionInfo.dimension.name" on-remove="onItemRemoved($item, dimensionInfo)" on-select="onItemSelected($item, dimensionInfo)">
+            <ui-select-match allow-clear="false" placeholder="{{dimensionInfo.dimension.name}}" >{{$item.name}}</ui-select-match>
+            <ui-select-choices repeat="entry in dimensionInfo.lookups | filter: $select.search track by entry.name">
+              {{entry.name}}
+            </ui-select-choices>
+          </ui-select>
+      </span>
+    </div>
+  </div>
+
+  <div x-ng-if="annotation && editable && dimensionInfos.length > 0">
+    <a x-ng-click="annotate()" x-ng-disabled="loading || annotationInProgress" onclick="return false;" class="btn btn-primary suggest-button">
+      <i class="fa fa-tags fa-fw"></i>
+
+      <span x-ng-show="!annotationInProgress">Suggest metadata</span>
+      <span x-ng-show="annotationInProgress">Suggesting...</span>
+
+      <i x-ng-show="annotationInProgress" class="fa fa-spinner fa-spin"></i>
+    </a>
+    <a x-ng-click="clear()" x-ng-disabled="loading" onclick="return false;" class="btn btn-default">
+      <i class="fa fa-trash fa-fw"></i>
+      <span>Clear metadata</span>`
+    </a>
+
+    <span x-ng-show="annotationError" class="label label-danger">
+      <span class="hidden-inline-xs">Annotation failed</span>
+      <span class="visible-inline-xs">Failed</span>
+    </span>
+  </div>
+</div>
