@@ -971,50 +971,60 @@ atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], fun
             });
             $q.allSettled(additionalPromises).then (function ()
               {
+                var modified = false;
                 dimensionInfos.forEach(function(dimensionInfo) {
                   if (dimensionInfo.lookups.length > 0 && dimensionInfo.dimension.entities.length === 0) {
                     metadata.dimensions.forEach(function (dimension) {
-                      if (dimensionInfo.dimension.id === dimension.id) {
+                      if (dimensionInfo.dimension.id === dimension.id && dimension.entities.length == 0) {
                         dimension.entities.push(dimensionInfo.lookups[0]);
+                        modified = true;
                         dimensionInfo.dimension.entities = dimension.entities;
                         dimensionInfo.model = dimension.entities;
+                        var dimensionIndex = findDimensionIndex(dimensionInfo.dimension.id, metadata);
+                        metadata.dimensions[dimensionIndex].entities = dimension.entities;
                       }
                     });
+
+
                   }
 
                 });
-                  dimensionInfos.forEach(function(dimensionInfo) {
-                      (function (dimensionInfo) {
-                          dimensionInfo.watchFinalizer = scope.$watch('dimensionInfos[' + dimensionInfos.indexOf(dimensionInfo) + '].model', function (newValue, oldValue) {
-                              if (newValue !== oldValue && _.isArray(newValue)) {
-                                  _.each(scope.extraDimensions,function(dimension) {
-                                      metadata = alignWithContentCategorization(metadata, dimension);
-                                  });
-                                  metadata.dimensions[dimensionInfo.dimensionIndex].entities = newValue;
+                if (modified) {
+                  scope.domainObject.setMetadata(metadata);
+                  scope.domainObject.changed();
+                }
+                dimensionInfos.forEach(function(dimensionInfo) {
+                    (function (dimensionInfo) {
+                        dimensionInfo.watchFinalizer = scope.$watch('dimensionInfos[' + dimensionInfos.indexOf(dimensionInfo) + '].model', function (newValue, oldValue) {
+                            if (newValue !== oldValue && _.isArray(newValue)) {
+                                _.each(scope.extraDimensions,function(dimension) {
+                                    metadata = alignWithContentCategorization(metadata, dimension);
+                                });
+                                metadata.dimensions[dimensionInfo.dimensionIndex].entities = newValue;
 
-                                  // This is a short-term fix for an issue with collection type information in combination
-                                  // with the Polopoly 10.12 Content API. The real fix would be that dimension entities
-                                  // should have an actual domain object handling the list data.
-                                  cleanEntityTypeInformation(metadata.dimensions[dimensionInfo.dimensionIndex]);
-                                  $timeout(function () {
-                                      scope.domainObject.setMetadata(metadata);
-                                      scope.domainObject.changed();
-                                  });
-                              }
-                          }, true);
-                      })(dimensionInfo);
-                  });
+                                // This is a short-term fix for an issue with collection type information in combination
+                                // with the Polopoly 10.12 Content API. The real fix would be that dimension entities
+                                // should have an actual domain object handling the list data.
+                                cleanEntityTypeInformation(metadata.dimensions[dimensionInfo.dimensionIndex]);
+                                $timeout(function () {
+                                    scope.domainObject.setMetadata(metadata);
+                                    scope.domainObject.changed();
+                                });
+                            }
+                        }, true);
+                    })(dimensionInfo);
+                });
 
-                  scope.watchFinalizer = function() {
-                      scope.dimensionInfos.forEach(function(dimensionInfo) {
-                          dimensionInfo.watchFinalizer();
-                      });
-                  };
+                scope.watchFinalizer = function() {
+                    scope.dimensionInfos.forEach(function(dimensionInfo) {
+                        dimensionInfo.watchFinalizer();
+                    });
+                };
 
-                  scope.dimensionInfos = dimensionInfos;
-                  scope.loading = false;
+                scope.dimensionInfos = dimensionInfos;
+                scope.loading = false;
 
-                  scope.lookupEntities();
+                scope.lookupEntities();
 
               });
 
@@ -1032,8 +1042,11 @@ atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], fun
             scope.dimensionInfos.forEach(function (dimensionInfo) {
                 dimensions.forEach(function (dimension) {
                     if (dimensionInfo.dimension.id === dimension.id) {
-                      dimensionInfo.dimension.entities = dimension.entities;
-                      dimensionInfo.model = dimension.entities;
+                      if (dimension.entities.length === 0 && dimensionInfo.hasOwnProperty("lookups") && dimensionInfo.lookups.length > 0)
+                      {} else {
+                        dimensionInfo.dimension.entities = dimension.entities;
+                        dimensionInfo.model = dimension.entities;
+                      }
                     }
                 });
             });
