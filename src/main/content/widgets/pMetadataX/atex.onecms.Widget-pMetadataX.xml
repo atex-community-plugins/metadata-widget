@@ -4,7 +4,7 @@
     <metadata>
       <contentid>
         <major>AppConfig</major>
-        <externalid>atex.onecms.Widget-pMetadataEMG</externalid>
+        <externalid>atex.onecms.Widget-pMetadataX</externalid>
       </contentid>
       <security-parent>
         <externalid>atex.onecms.OneCMSSettings</externalid>
@@ -14,13 +14,13 @@
       </input-template>
     </metadata>
 
-    <component group="polopoly.Content" name="name">OneCMS Widget - pMetadata</component>
+    <component group="polopoly.Content" name="name">OneCMS Widget - pMetadataX</component>
 
-    <file name="manifest.json" encoding="relative">pMetadata-manifest.json</file>
-    <file name="widget.js" encoding="relative">pMetadata-widget.js</file>
-    <file name="template.html" encoding="relative">pMetadata-template.html</file>
+    <file name="manifest.json" encoding="relative">pMetadataX-manifest.json</file>
+    <file name="widget.js" encoding="relative">pMetadataX-widget.js</file>
+    <file name="template.html" encoding="relative">pMetadataX-template.html</file>
     <file name="tree-template.html" encoding="relative">tree-template.html</file>
-    <file name="style.css" encoding="relative">pMetadata-style.css</file>
+    <file name="style.css" encoding="relative">pMetadataX-style.css</file>
 
     <file name="sortable/Sortable.min.js" encoding="relative">sortable/Sortable.min.js</file>
   </content>

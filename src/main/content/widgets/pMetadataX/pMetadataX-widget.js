@@ -198,8 +198,8 @@ var buildAttributesPopoverContent = function(entityContentId, attributes) {
   return html;
 };
 
-atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], function(select2, sortable) {
-  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataTreeEntity', ['$compile', 'MetadataService',
+atex.onecms.register('ng-directive', 'pMetadataX', ['select2','sortable'], function(select2, sortable) {
+  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataXTreeEntity', ['$compile', 'MetadataService',
     function($compile, MetadataService) {
       return {
         scope: {
@@ -302,7 +302,7 @@ atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], fun
     }
   ]);
 
-  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataTreeDimension', ['MetadataService','$http','$location',
+  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataXTreeDimension', ['MetadataService','$http','$location',
     function(MetadataService,$http, $location) {
       return {
         require: '^ngModel',
@@ -371,7 +371,7 @@ atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], fun
     }
   ]);
 
-  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataTagDimension', function(MetadataService, $compile, $timeout) {
+  angular.module('atex.onecms.ui.widgets').registerDirective('pMetadataXTagDimension', function(MetadataService, $compile, $timeout) {
     return {
       require: '^ngModel',
       priority: 1, // Needed since we're using x-ng-model on the same element
@@ -918,7 +918,7 @@ atex.onecms.register('ng-directive', 'pMetadataEMG', ['select2','sortable'], fun
                 console.warn(message);
 
                 return $q.reject(atex.onecms.error.Error({
-                  origin: 'pMetadataEMG',
+                  origin: 'pMetadataX',
 
                   type: atex.onecms.error.types.INVALID_PARAMETERS,
                   severity: atex.onecms.error.severities.CRITICAL,

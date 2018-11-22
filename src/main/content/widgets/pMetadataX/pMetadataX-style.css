@@ -1,42 +1,42 @@
-.pMetadata .alert-warning {
+.pMetadataX .alert-warning {
   margin-bottom: 10px;
 }
 
-.pMetadata .well {
+.pMetadataX .well {
   background-color: #fff;
   border-color: #ccc;
   padding: 8px;
 }
 
-.pMetadata .help-block {
+.pMetadataX .help-block {
   margin-bottom: 0;
 }
 
-.pMetadata .control-label {
+.pMetadataX .control-label {
   font-size: 13px;
 }
 
-.pMetadata .metadata-tree {
+.pMetadataX .metadata-tree {
   font-size: 16px;
   margin-bottom: 0;
   padding-left: 2.4em;
 }
 
-.pMetadata .metadata-tree.root {
+.pMetadataX .metadata-tree.root {
   white-space: nowrap;
   overflow: auto;
   padding-left: 1.2em;
 }
 
-.pMetadata .metadata-tree .expandable {
+.pMetadataX .metadata-tree .expandable {
   margin-left: -1.3em;
 }
 
-.pMetadata .metadata-tree li {
+.pMetadataX .metadata-tree li {
   margin: 5px 0;
 }
 
-.pMetadata .metadata-tree .entity-label {
+.pMetadataX .metadata-tree .entity-label {
   padding: 2px 6px;
   border-radius: 3px;
 }
@@ -45,30 +45,30 @@
   background-color: #E1E7FF;
 }
 
-.pMetadata .metadata-tree .entity-label,
-.pMetadata .metadata-tree .entity-toggle {
+.pMetadataX .metadata-tree .entity-label,
+.pMetadataX .metadata-tree .entity-toggle {
   cursor: pointer;
 }
 
-.pMetadata .metadata-tree .status-icon {
+.pMetadataX .metadata-tree .status-icon {
   margin-left: 10px;
 }
 
-.pMetadata .metadata-tree .entity-label.selected {
+.pMetadataX .metadata-tree .entity-label.selected {
   background-color: #5674EB;
   color: #EEE;
 }
 
-.pMetadata > .onecms-spinner-icon {
+.pMetadataX > .onecms-spinner-icon {
   float: right;
   margin-top: -21px;
 }
 
-.pMetadata .label {
+.pMetadataX .label {
   cursor: default;
 }
 
-.pMetadata .btn .fa:last-child {
+.pMetadataX .btn .fa:last-child {
   margin-left: 5px;
 }
 
