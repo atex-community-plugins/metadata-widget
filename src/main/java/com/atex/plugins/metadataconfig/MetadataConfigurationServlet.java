@@ -1,26 +1,25 @@
 package com.atex.plugins.metadataconfig;
 
-import com.atex.onecms.app.dam.DeskConfig;
 import com.atex.onecms.app.dam.solr.SolrUtils;
 import com.atex.onecms.app.dam.standard.aspects.DamFolderAspectBean;
 import com.atex.onecms.content.*;
 import com.atex.onecms.ws.service.ContextParams;
 import com.atex.onecms.ws.service.ErrorResponseException;
-import com.atex.onecms.ws.service.UserServiceUtil;
 import com.atex.onecms.ws.service.WebServiceUtil;
 import com.google.gson.Gson;
 import com.polopoly.cm.ExternalContentId;
+import com.polopoly.cm.app.search.categorization.dimension.TagCategoryPolicy;
+import com.polopoly.cm.client.CMException;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.metadata.Entity;
-import com.polopoly.metadata.MetadataEntity;
 import com.polopoly.search.solr.PostFilteredSolrSearchClient;
 import com.polopoly.search.solr.SearchClient;
 import com.polopoly.search.solr.SearchResult;
 import com.polopoly.search.solr.SearchResultPage;
 import com.polopoly.search.solr.querydecorators.WithSecurityParent;
 import com.sun.jersey.spi.resource.PerRequest;
-import org.apache.camel.CamelContext;
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -37,16 +36,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Path("/")
 @PerRequest
 public class MetadataConfigurationServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(MetadataConfigurationServlet.class.getName());
     private ContextParams contextParams;
-    private String contentApiUrl;
     private SimpleSolrService solrService;
     private SearchClient searchClient;
     @Context
@@ -56,10 +53,6 @@ public class MetadataConfigurationServlet extends HttpServlet {
         contextParams = new ContextParams(servletContext, servletConfig, httpHeaders, uriInfo);
 
         try {
-            DeskConfig deskConfig = (DeskConfig) servletContext.getAttribute("desk.config");
-            if (deskConfig != null && deskConfig.getApiUrl() != null) {
-                contentApiUrl = deskConfig.getApiUrl();
-            }
             searchClient = (SearchClient) contextParams.getApplication().getApplicationComponent(PostFilteredSolrSearchClient.DEFAULT_COMPOUND_NAME);
 
             solrService = new SimpleSolrService(SolrUtils.getSolrServerUrl(), SolrUtils.getCore());
@@ -97,29 +90,61 @@ public class MetadataConfigurationServlet extends HttpServlet {
         return gson.toJson(lookupValues);
     }
 
-    private List<Entity> getDimensionEntities(String dimensionId) throws Exception {
+    protected List<Entity> getDimensionEntities(String dimensionId) throws Exception {
 
         com.polopoly.cm.ContentId contentId = new ExternalContentId(dimensionId);
         Policy policy = getCMServer().getPolicy(contentId);
-
-        SolrQuery q = new SolrQuery("*:*");
-        q = new WithSecurityParent(policy.getContentId()).decorate(q);
-        SearchResult response = searchClient.search(q,255);
-
         List<Entity> lookups = new ArrayList<>();
-        Iterator<SearchResultPage> iterator = response.iterator();
-        while (iterator.hasNext()) {
-            SearchResultPage docList = iterator.next();
-            for (com.polopoly.cm.ContentId contentResultId : docList.getHits()) {
-                Policy resultPolicy = getCMServer().getPolicy(contentResultId);
-                lookups.add(new Entity(resultPolicy.getContent().getComponent("polopoly.Content","name"), resultPolicy.getContent().getComponent("polopoly.Content","name")));
+        if (policy instanceof TagCategoryPolicy) {
+            TagCategoryPolicy tagCategoryPolicy = (TagCategoryPolicy) policy;
+            String latestTags = tagCategoryPolicy.getComponent("polopoly.ContentLists", "latestTags");
+            if (latestTags != null && latestTags.length() > 0) {
+                String[] names = tagCategoryPolicy.getContentReferenceNames(latestTags);
+                Map<Integer,com.polopoly.cm.ContentId> map = new TreeMap<>();
+                for (String name : names) {
+                    com.polopoly.cm.ContentId contentReference = tagCategoryPolicy.getContentReference(latestTags, name);
+                    if (contentReference != null) {
+                        try {
+                            Integer index = Integer.parseInt(name);
+                            map.put(index,contentReference);
+                        } catch (NumberFormatException e) {
+                            LOGGER.debug("Invalid index "+name,e);
+                        }
+                    }
+                }
+                for (Integer key : map.keySet()) {
+                    com.polopoly.cm.ContentId resultContentId = map.get(key);
+                    addContentIdIntoLookup(lookups, resultContentId);
+                }
+            } else {
+                SolrQuery q = new SolrQuery("*:*");
+                q = new WithSecurityParent(policy.getContentId()).decorate(q);
+                SearchResult response = searchClient.search(q,255);
+
+
+                Iterator<SearchResultPage> iterator = response.iterator();
+                while (iterator.hasNext()) {
+                    SearchResultPage docList = iterator.next();
+                    for (com.polopoly.cm.ContentId contentResultId : docList.getHits()) {
+                        addContentIdIntoLookup(lookups, contentResultId);
+                    }
+                }
             }
         }
 
         return lookups;
     }
 
-    private List<Entity> getFolderLookup(List<Entity> lookups) throws SolrServerException, Exception {
+    protected void addContentIdIntoLookup(List<Entity> lookups, com.polopoly.cm.ContentId resultContentId) throws CMException, ErrorResponseException {
+        Policy resultPolicy = getCMServer().getPolicy(resultContentId);
+        lookups.add(makeEntity(resultPolicy));
+    }
+
+    protected Entity makeEntity(Policy resultPolicy) throws CMException {
+        return new Entity(resultPolicy.getContent().getComponent("polopoly.Content", "name"), resultPolicy.getContent().getComponent("polopoly.Content", "name"));
+    }
+
+    protected List<Entity> getFolderLookup(List<Entity> lookups) throws SolrServerException, Exception {
 
         final ContentManager contentManager = getContentManager();
         SolrQuery q = new SolrQuery("+atex_desk_objectType:(folder)");
@@ -156,11 +181,11 @@ public class MetadataConfigurationServlet extends HttpServlet {
         return lookups;
     }
 
-    private PolicyCMServer getCMServer() throws ErrorResponseException {
+    protected PolicyCMServer getCMServer() throws ErrorResponseException {
         return contextParams.getPolicyCMServer();
     }
 
-    private ContentManager getContentManager() throws ErrorResponseException {
+    protected ContentManager getContentManager() throws ErrorResponseException {
         return webServiceUtil.getContentManager();
     }
 }
