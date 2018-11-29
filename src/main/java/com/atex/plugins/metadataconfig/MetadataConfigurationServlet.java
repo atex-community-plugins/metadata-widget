@@ -99,40 +99,48 @@ public class MetadataConfigurationServlet extends HttpServlet {
             TagCategoryPolicy tagCategoryPolicy = (TagCategoryPolicy) policy;
             String latestTags = tagCategoryPolicy.getComponent("polopoly.ContentLists", "latestTags");
             if (latestTags != null && latestTags.length() > 0) {
-                String[] names = tagCategoryPolicy.getContentReferenceNames(latestTags);
-                Map<Integer,com.polopoly.cm.ContentId> map = new TreeMap<>();
-                for (String name : names) {
-                    com.polopoly.cm.ContentId contentReference = tagCategoryPolicy.getContentReference(latestTags, name);
-                    if (contentReference != null) {
-                        try {
-                            Integer index = Integer.parseInt(name);
-                            map.put(index,contentReference);
-                        } catch (NumberFormatException e) {
-                            LOGGER.debug("Invalid index "+name,e);
-                        }
-                    }
-                }
-                for (Integer key : map.keySet()) {
-                    com.polopoly.cm.ContentId resultContentId = map.get(key);
-                    addContentIdIntoLookup(lookups, resultContentId);
-                }
+                insertLatestTagsValues(lookups, tagCategoryPolicy, latestTags);
             } else {
-                SolrQuery q = new SolrQuery("*:*");
-                q = new WithSecurityParent(policy.getContentId()).decorate(q);
-                SearchResult response = searchClient.search(q,255);
-
-
-                Iterator<SearchResultPage> iterator = response.iterator();
-                while (iterator.hasNext()) {
-                    SearchResultPage docList = iterator.next();
-                    for (com.polopoly.cm.ContentId contentResultId : docList.getHits()) {
-                        addContentIdIntoLookup(lookups, contentResultId);
-                    }
-                }
+                insertSolrTagValues(policy, lookups);
             }
         }
 
         return lookups;
+    }
+
+    private void insertSolrTagValues(Policy policy, List<Entity> lookups) throws CMException, ErrorResponseException {
+        SolrQuery q = new SolrQuery("*:*");
+        q = new WithSecurityParent(policy.getContentId()).decorate(q);
+        SearchResult response = searchClient.search(q,255);
+
+
+        Iterator<SearchResultPage> iterator = response.iterator();
+        while (iterator.hasNext()) {
+            SearchResultPage docList = iterator.next();
+            for (com.polopoly.cm.ContentId contentResultId : docList.getHits()) {
+                addContentIdIntoLookup(lookups, contentResultId);
+            }
+        }
+    }
+
+    private void insertLatestTagsValues(List<Entity> lookups, TagCategoryPolicy tagCategoryPolicy, String latestTags) throws CMException, ErrorResponseException {
+        String[] names = tagCategoryPolicy.getContentReferenceNames(latestTags);
+        Map<Integer, com.polopoly.cm.ContentId> map = new TreeMap<>();
+        for (String name : names) {
+            com.polopoly.cm.ContentId contentReference = tagCategoryPolicy.getContentReference(latestTags, name);
+            if (contentReference != null) {
+                try {
+                    Integer index = Integer.parseInt(name);
+                    map.put(index,contentReference);
+                } catch (NumberFormatException e) {
+                    LOGGER.debug("Invalid index "+name,e);
+                }
+            }
+        }
+        for (Integer key : map.keySet()) {
+            com.polopoly.cm.ContentId resultContentId = map.get(key);
+            addContentIdIntoLookup(lookups, resultContentId);
+        }
     }
 
     protected void addContentIdIntoLookup(List<Entity> lookups, com.polopoly.cm.ContentId resultContentId) throws CMException, ErrorResponseException {
@@ -141,7 +149,8 @@ public class MetadataConfigurationServlet extends HttpServlet {
     }
 
     protected Entity makeEntity(Policy resultPolicy) throws CMException {
-        return new Entity(resultPolicy.getContent().getComponent("polopoly.Content", "name"), resultPolicy.getContent().getComponent("polopoly.Content", "name"));
+        String name = resultPolicy.getContent().getComponent("polopoly.Content", "name");
+        return new Entity(name, name);
     }
 
     protected List<Entity> getFolderLookup(List<Entity> lookups) throws SolrServerException, Exception {
