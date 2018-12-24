@@ -6,6 +6,11 @@
 
 
   <display-name>metadata-widget-fragment</display-name>
+  <ordering>
+    <after>
+      <name>p_webapp_onecms</name>
+    </after>
+  </ordering>
 
   <listener>
     <listener-class>com.atex.onecms.ws.service.WebServiceUtilContextListener</listener-class>

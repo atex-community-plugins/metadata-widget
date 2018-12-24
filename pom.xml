@@ -79,6 +79,7 @@
     <polopoly.version>10.16.7</polopoly.version>
     <camel.version>2.13.2</camel.version>
     <spring.version>4.1.0.RELEASE</spring.version>
+    <desk.version>1.12</desk.version>
   </properties>
 
   <pluginRepositories>
@@ -107,20 +108,11 @@
       <groupId>com.polopoly</groupId>
       <artifactId>polopoly</artifactId>
       <version>${polopoly.version}</version>
-      <classifier>api</classifier>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
-      <version>${polopoly.version}</version>
-      <type>jar</type>
-      <scope>runtime</scope>
-      <optional>true</optional>
-    </dependency>
 
-    <!-- Make the concurrent dependency explicit so that we can remove it from the jboss container libs -->
+    <!-- Make the concurrent dependency explicit so that we can remove it from the jboss container libs 
     <dependency>
       <groupId>concurrent</groupId>
       <artifactId>concurrent</artifactId>
@@ -146,6 +138,7 @@
       <version>${polopoly.version}</version>
       <scope>provided</scope>
     </dependency>
+   
 
     <dependency>
       <groupId>org.mockito</groupId>
@@ -158,31 +151,17 @@
       <artifactId>jersey-bundle</artifactId>
       <version>1.19.3</version>
     </dependency>
+     -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
       <version>2.8.0</version>
     </dependency>
     <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
-      <version>10.17.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
       <groupId>com.atex</groupId>
       <artifactId>module-desk</artifactId>
-      <version>1.11-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>com.atex</groupId>
-      <artifactId>module-desk</artifactId>
-      <version>1.12</version>
-    </dependency>
-    <dependency>
-      <groupId>com.polopoly</groupId>
-      <artifactId>polopoly</artifactId>
-      <version>10.16.7</version>
-      <classifier>api</classifier>
+      <version>${desk.version}</version>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>
