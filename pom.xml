@@ -26,7 +26,7 @@
 
   <groupId>com.atex.plugins</groupId>
   <artifactId>metadata-widget</artifactId>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <distributionManagement>
@@ -111,7 +111,7 @@
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
-   
+
     <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
