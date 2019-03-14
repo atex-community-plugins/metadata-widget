@@ -1,17 +1,13 @@
 package com.atex.plugins.metadataconfig;
 
-import com.atex.onecms.app.dam.solr.SolrUtils;
-import com.polopoly.search.solr.SolrClientUtils;
 import com.polopoly.search.solr.SolrServerUrl;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 
 public class SimpleSolrService {
 
