@@ -5,7 +5,7 @@
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
 
 
-  <display-name>metadata-widget-fragment</display-name>
+  <name>metadata_widget_fragment</name>
   <ordering>
     <after>
       <name>p_webapp_onecms</name>
