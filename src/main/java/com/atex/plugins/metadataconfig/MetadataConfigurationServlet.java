@@ -10,13 +10,11 @@ import com.google.gson.Gson;
 import com.polopoly.cm.ExternalContentId;
 import com.polopoly.cm.app.search.categorization.dimension.TagCategoryPolicy;
 import com.polopoly.cm.client.CMException;
+import com.polopoly.cm.client.CmClientFacade;
 import com.polopoly.cm.policy.Policy;
 import com.polopoly.cm.policy.PolicyCMServer;
 import com.polopoly.metadata.Entity;
-import com.polopoly.search.solr.PostFilteredSolrSearchClient;
-import com.polopoly.search.solr.SearchClient;
-import com.polopoly.search.solr.SearchResult;
-import com.polopoly.search.solr.SearchResultPage;
+import com.polopoly.search.solr.*;
 import com.polopoly.search.solr.querydecorators.WithSecurityParent;
 import com.sun.jersey.spi.resource.PerRequest;
 import org.apache.log4j.Logger;
@@ -54,9 +52,7 @@ public class MetadataConfigurationServlet extends HttpServlet {
 
         try {
             searchClient = (SearchClient) contextParams.getApplication().getApplicationComponent(PostFilteredSolrSearchClient.DEFAULT_COMPOUND_NAME);
-
             solrService = new SimpleSolrService(SolrUtils.getSolrServerUrl(), SolrUtils.getCore());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
