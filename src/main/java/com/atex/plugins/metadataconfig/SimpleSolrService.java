@@ -8,6 +8,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Supplier;
 
 public class SimpleSolrService {
 
@@ -26,9 +27,17 @@ public class SimpleSolrService {
         }
         if (this.solrServer == null) {
             try {
+                Supplier<String> coreSupplier = () -> core;
+                this.solrServer = Class.forName("com.polopoly.search.solr.SolrClientUtils").getDeclaredMethod("createSolrClient", String.class, Supplier.class).invoke(null, baseUrl, coreSupplier);
+            } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                log.debug("Could not create solrServer for polopoly 10.19.0", e);
+            }
+        }
+        if (this.solrServer == null) {
+            try {
                 this.solrServer = Class.forName("com.polopoly.search.solr.SolrClientUtils").getDeclaredMethod("createSolrClient", String.class).invoke(null, baseUrl);
             } catch (ClassNotFoundException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                log.error("Could not create solrServer", e);
+                log.error("Could not create solrServer for polopoly < 10.19.0", e);
             }
         }
     }
