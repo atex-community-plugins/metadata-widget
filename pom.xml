@@ -26,7 +26,7 @@
 
   <groupId>com.atex.plugins</groupId>
   <artifactId>metadata-widget</artifactId>
-  <version>1.3</version>
+  <version>1.4-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <distributionManagement>
@@ -72,7 +72,7 @@
   <scm>
     <developerConnection>scm:git:git@github.com:atex-community-plugins/metadata-widget.git</developerConnection>
     <url>https://github.com/atex-community-plugins/metadata-widget</url>
-    <tag>metadata-widget-1.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
